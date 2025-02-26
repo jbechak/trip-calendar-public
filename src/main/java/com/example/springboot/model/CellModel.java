@@ -7,14 +7,16 @@ public class CellModel {
     private String color;
     private String backgroundColor;
     private Boolean isBold;
+    private int sortOrder;
 
     public CellModel() {}
 
-    public CellModel(String id, String calendarDateId, String text, Boolean isBold) {
+    public CellModel(String id, String calendarDateId, String text, Boolean isBold, int sortOrder) {
         this.id = id;
         this.calendarDateId = calendarDateId;
         this.text = text;
         this.isBold = isBold;
+        this.sortOrder = sortOrder;
     }
 
     public String getId() {
@@ -57,6 +59,13 @@ public class CellModel {
     }
     public void setIsBold(Boolean isBold) {
         this.isBold = isBold;
+    }
+
+    public int getSortOrder() {
+        return sortOrder;
+    }
+    public void setSortOrder(int sortOrder) {
+        this.sortOrder = sortOrder;
     }
 
 }
