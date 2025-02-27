@@ -51,4 +51,10 @@ public class JdbcCellDao implements CellDao {
         int count = jdbcTemplate.queryForObject(sql, Integer.class, calendarDateId);
         return count;
     }
+
+    @Override
+    public void deleteCell(String id) {
+        String sql = "DELETE FROM cell WHERE id = ?;";
+        jdbcTemplate.update(sql, id);
+    }
 }

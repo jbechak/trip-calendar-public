@@ -28,4 +28,13 @@ public class CellController {
     public void updateCell(@RequestBody CellModel cell) {
         dao.updateCell(cell);
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteCell(@PathVariable String id) {
+        try {
+            dao.deleteCell(id);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY);
+        }
+    }
 }

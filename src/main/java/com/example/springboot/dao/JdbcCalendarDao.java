@@ -70,10 +70,7 @@ public class JdbcCalendarDao implements CalendarDao {
     }
 
     private void createCalendarDates(CalendarDto dto, String calendarId) {
-        LocalDate startDate = dto.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        LocalDate endDate = dto.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
-        for (var date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
+        for (var date = dto.getStartDate(); !date.isAfter(dto.getEndDate()); date = date.plusDays(1)) {
             var id = General.getGuid();
             String sql = "INSERT INTO calendar_date (id, calendar_id, event_date) VALUES (?, ?, ?);";
             jdbcTemplate.update(sql, id, calendarId, date);
