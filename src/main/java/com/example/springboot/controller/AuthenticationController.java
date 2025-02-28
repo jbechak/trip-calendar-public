@@ -1,9 +1,6 @@
 package com.example.springboot.controller;
 
-//import javax.validation.Valid;
-
 import com.example.springboot.model.*;
-//import com.techelevator.model.*;
 import com.example.springboot.dto.LoginDto;
 import com.example.springboot.dto.LoginResponseDto;
 import com.example.springboot.dto.RegisterUserDto;
@@ -11,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -28,22 +26,29 @@ import com.example.springboot.security.jwt.TokenProvider;
 public class AuthenticationController {
 
     private final TokenProvider tokenProvider;
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    //private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private UserDao userDao;
 
-    public AuthenticationController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder, UserDao userDao) {
+    private final AuthenticationManager authenticationManager;
+
+    public AuthenticationController(AuthenticationManager authenticationManager, TokenProvider tokenProvider, UserDao userDao) {
+        this.authenticationManager = authenticationManager;
         this.tokenProvider = tokenProvider;
-        this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.userDao = userDao;
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+//    public AuthenticationController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder, UserDao userDao) {
+//        this.tokenProvider = tokenProvider;
+//        this.authenticationManagerBuilder = authenticationManagerBuilder;
+//        this.userDao = userDao;
+//    }
+
+    @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginDto loginDto) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword())
+        );
 
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
-
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = tokenProvider.createToken(authentication, false);
 
@@ -51,8 +56,26 @@ public class AuthenticationController {
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+
         return new ResponseEntity<>(new LoginResponseDto(jwt, user), httpHeaders, HttpStatus.OK);
     }
+
+//    @RequestMapping(value = "/login", method = RequestMethod.POST)
+//    public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginDto loginDto) {
+//
+//        UsernamePasswordAuthenticationToken authenticationToken =
+//                new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
+//
+//        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//        String jwt = tokenProvider.createToken(authentication, false);
+//
+//        UserModel user = userDao.findByUsername(loginDto.getUsername());
+//
+//        HttpHeaders httpHeaders = new HttpHeaders();
+//        httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+//        return new ResponseEntity<>(new LoginResponseDto(jwt, user), httpHeaders, HttpStatus.OK);
+//    }
 
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/register", method = RequestMethod.POST)
