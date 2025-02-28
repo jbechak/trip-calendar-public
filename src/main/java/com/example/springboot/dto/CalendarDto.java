@@ -6,6 +6,8 @@ import java.time.LocalDate;
 import java.util.Date;
 
 public class CalendarDto {
+
+    private String userId;
     private String name;
     private String description;
 
@@ -14,10 +16,13 @@ public class CalendarDto {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate endDate;
-//    private Date startDate;
-//    private Date endDate;
 
-
+    public String getUserId() {
+        return userId;
+    }
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public String getName() {
         return name;

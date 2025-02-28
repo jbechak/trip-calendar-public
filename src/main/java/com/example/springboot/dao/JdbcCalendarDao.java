@@ -8,11 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import com.example.springboot.utility.General;
-
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Component
@@ -36,9 +32,22 @@ public class JdbcCalendarDao implements CalendarDao {
     }
 
     @Override
+    public List<CalendarModel> getByUser(String userId) {
+        String sql = "SELECT * FROM calendar WHERE user_id = ? ORDER BY name;";
+
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
+        List<CalendarModel> calendars = new ArrayList<>();
+        while (results.next()) {
+            calendars.add(mapRowToFlatCalendar(results));
+        }
+        return calendars;
+    }
+
+    @Override
     public CalendarModel get(String id) {
         String sql = "SELECT " +
         "\tcalendar.id AS \"calendarId\",\n" +
+        "\tcalendar.user_id AS \"userId\",\n" +
         "\tname,\n" +
         "\tdescription,\n" +
         "\tcalendar_date.id AS \"calendarDateId\",\n" +
@@ -63,8 +72,8 @@ public class JdbcCalendarDao implements CalendarDao {
     @Override
     public CalendarModel createCalendar(CalendarDto dto) {
         var id = General.getGuid();
-        String sql = "INSERT INTO calendar (id, name, description) VALUES (?, ?, ?);";
-        jdbcTemplate.update(sql, id, dto.getName(), dto.getDescription());
+        String sql = "INSERT INTO calendar (id, user_id, name, description) VALUES (?, ?, ?, ?);";
+        jdbcTemplate.update(sql, id, dto.getUserId(), dto.getName(), dto.getDescription());
         createCalendarDates(dto, id);
         return get(id);
     }
@@ -92,6 +101,7 @@ public class JdbcCalendarDao implements CalendarDao {
         while (results.next()) {
             if (!isFirstRowMapped) {
                 calendar.setId(results.getString("calendarId"));
+                calendar.setUserId(results.getString("userId"));
                 calendar.setName(results.getString("name"));
                 calendar.setDescription(results.getString("description"));
                 isFirstRowMapped = true;

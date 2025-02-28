@@ -3,9 +3,24 @@ begin transaction;
 drop table if exists cell;
 drop table if exists calendar_date;
 drop table if exists calendar;
+drop table if exists users;
+
+CREATE TABLE users (
+	id varchar(32) NOT NULL,
+	username varchar(50) NOT NULL,
+	password_hash varchar(200) NOT NULL,
+	role varchar(50) NOT NULL,
+	first_name varchar(50),
+	last_name varchar(50),
+	email varchar(100),
+
+	CONSTRAINT pk_user_id PRIMARY KEY (id),
+	CONSTRAINT uq_username UNIQUE (username)
+);
 
 CREATE TABLE calendar (
 	id varchar(32) NOT NULL,
+	user_id varchar(32) NULL,
 	name varchar(50) NOT NULL,
 	description varchar(500) NULL,
 

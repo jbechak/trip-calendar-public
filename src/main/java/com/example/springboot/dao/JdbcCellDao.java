@@ -1,9 +1,7 @@
 package com.example.springboot.dao;
 
-import com.example.springboot.model.CalendarModel;
 import com.example.springboot.model.CellModel;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;

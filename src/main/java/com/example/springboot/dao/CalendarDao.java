@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface CalendarDao {
     List<CalendarModel> getAll();
+    List<CalendarModel> getByUser(String userId);
     CalendarModel get(String id);
     CalendarModel createCalendar(CalendarDto dto);
 }

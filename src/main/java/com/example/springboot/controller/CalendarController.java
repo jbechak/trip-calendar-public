@@ -21,6 +21,11 @@ public class CalendarController {
         var calendars = dao.getAll();
         return calendars;
     }
+    @GetMapping("/getByUser/{userId}")
+    public List<CalendarModel> getByUser(@PathVariable String userId) {
+        var calendars = dao.getByUser(userId);
+        return calendars;
+    }
 
     @GetMapping("/{id}")
     public CalendarModel getCalendar(@PathVariable String id) {
