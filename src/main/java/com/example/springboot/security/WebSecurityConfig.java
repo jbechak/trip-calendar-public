@@ -2,6 +2,7 @@ package com.example.springboot.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 //import org.springframework.security.authentication.ProviderManager;
 //import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -30,6 +31,7 @@ public class WebSecurityConfig {
                 //.requestMatchers("/calendar/**").hasAnyRole("USER", "ADMIN")
                 .requestMatchers("/calendar/**").permitAll()
                 //.requestMatchers("/calendar/**").authenticated()
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow preflight requests
                 .anyRequest().authenticated()
             );
 
