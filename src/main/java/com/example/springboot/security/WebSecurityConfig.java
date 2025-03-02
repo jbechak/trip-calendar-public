@@ -3,11 +3,11 @@ package com.example.springboot.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+//import org.springframework.security.authentication.ProviderManager;
+//import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
+//import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -23,15 +23,15 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Apply CORS
-                .csrf(csrf -> csrf.disable()) // Disable CSRF if using JWT
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/register").permitAll()
-                        //.requestMatchers("/calendar/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/calendar/**").permitAll()
-                        //.requestMatchers("/calendar/**").authenticated()
-                        .anyRequest().authenticated()
-                );
+            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Apply CORS
+            .csrf(csrf -> csrf.disable()) // Disable CSRF if using JWT
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/login", "/register").permitAll()
+                //.requestMatchers("/calendar/**").hasAnyRole("USER", "ADMIN")
+                .requestMatchers("/calendar/**").permitAll()
+                //.requestMatchers("/calendar/**").authenticated()
+                .anyRequest().authenticated()
+            );
 
         return http.build();
     }
