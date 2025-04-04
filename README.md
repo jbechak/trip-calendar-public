@@ -1,4 +1,5 @@
 **Trip Calendar**
+
 The deployed application can be found here:
 https://trip-calendar.netlify.app/
 
